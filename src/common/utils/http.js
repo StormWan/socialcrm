@@ -25,7 +25,7 @@ const tip = msg => {
  */
 const toLogin = () => {
   router.replace({
-    path: '/login',
+    path: '/',
     query: {
       redirect: router.currentRoute.fullPath
     }
@@ -41,6 +41,8 @@ const errorHandle = (status, other) => {
   switch (status) {
     // 401: 未登录状态，跳转登录页
     case 401:
+      tip('未登录，请登录')
+      localStorage.clear() // <---清空 localStorage ，跳转微信授权页面
       toLogin()
       break
     // 403 token过期

@@ -174,9 +174,7 @@ export default {
       try {
         if (this.formData.get('order_id') === undefined || this.formData.get('order_id') === null) {
           Toast('订单号不能为空')
-        } else if (isNaN(this.formData.get('order_id'))) {
-          Toast('请输入数字')
-        } else if (this.formData.get('order_id').length !== 18) {
+        } else if (isNaN(this.formData.get('order_id')) && this.formData.get('order_id').length !== 18) {
           Toast('请输入正确的订单号格式') // <---isNaN() 函数用于检查其参数是否是非数字值。非数值就是 ture
         } else if (this.formData.get('screen_shot') === undefined || this.formData.get('screen_shot') === null) {
           Toast('晒单截图不能为空')
@@ -184,35 +182,10 @@ export default {
           Toast('参数错误')
         } else {
           const { data } = await api.show.showCreate(this.formData)
-            // .then(res => {
-            //   console.log(res)
-            // })
-            // .catch(err => {
-            //   console.log(err)
-            //   localStorage.clear() // <-----清空 localStorage,再次获取微信授权
-            //   let redirectUrl = 'http://newsh5.cn'
-            //   const appid = 'wx6a75c84b50b0939f'
-            //   window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
-            // })
-          // console.log(data)
           if (data.code !== 200) {
             Toast(data.code)
-            if (data.code === '401') { // <---查看是否有认证消息
-              localStorage.clear() // <-----清空 localStorage,再次获取微信授权
-              let redirectUrl = 'http://newsh5.cn'
-              const appid = 'wx6a75c84b50b0939f'
-              window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
-            }
-            if (data.code === '502') {
-              window.location.reload() // <--重新加载页面
-            }
           } else {
-            // this.formData = null
-            // this.orderNum = null
-            // this.img.splice(0, this.img.length) // <---清空img
-            // window.location.reload() // <----动态刷新页面，避免 js 在html 未加载完就执行
             Toast(data.desc)
-            console.log(data.desc)
           }
         }
       } catch (e) {
