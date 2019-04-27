@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import api from '@/api/'
+import {getUrlQueryParams, getQueryString, getUrlKey} from "./common/utils/regexp"
+import base from "./api/base"
 
 Vue.use(Router)
 
@@ -15,9 +17,20 @@ const router = new Router({
       },
       components: {
         default: () => import('./views/home/index.vue'),
-        tabbar: () => import('./components/tabbar/index.vue')
+        // tabbar: () => import('./components/tabbar/index.vue')
       }
     },
+    // {
+    //   path: '/activity/:id',
+    //   name: 'activity',
+    //   meta: {
+    //     noAuth: false// 处理需要登录的页面
+    //   },
+    //   components: {
+    //     default: () => import('./views/home/index.vue'),
+    //     // tabbar: () => import('./components/tabbar/index.vue')
+    //   }
+    // },
     {
       path: '/task',
       name: 'task',
@@ -99,45 +112,25 @@ router.beforeEach(async (to, from, next) => {
       return
     }
     // localStorage 没有保存的信息就跳转到微信申请页面，redirectUrl 是返回当前页面，也就是好评返现的页面
-    let redirectUrl = 'http://newsh5.cn'
+    const activity = getUrlKey('activity')
+    const code = getUrlKey('code')
+    const redirectUrl = base.base + '/#/?activity=' + activity
     const appid = 'wx6a75c84b50b0939f'
-    const code = getUrl(window.location.href).code
-    console.log(code)
     if (code === undefined) {
-      console.log('wechat login')
       // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
     }
     if (code !== undefined) {
-      const userInfo = localStorage.getItem('userInfo')
-      const token = (userInfo !== undefined && userInfo !== null) ? userInfo.token : ''
-      console.log(token)
+      const token = localStorage.getItem('token')
       let { data } = await api.apply.auth({ code: code, appid: appid, redirect_uri: redirectUrl, token: token }) // 获取用户信息,后端可首先通过cookie,session等判断,没有信息则通过code获取
       if (data.code === 200) {
         localStorage.setItem('userInfo', data)
         localStorage.setItem('token', token)
         next()
       } else {
-        console.log(data)
-        console.log('wechat login 2')
-        alert('11111111111111111') // <--- 便于查看是否 code = 401 时候再回来到这里，后删
-        next() // <---为了浏览器测试，后删
+        next()
         // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
       }
     }
   }
-  // }
 })
 
-// 截取url上的code ,可能没有,则返回''空字符串,截取的是"?"后面的字串
-function getUrl () {
-  let url = location.search
-  let theRequest = {}
-  if (url.indexOf('?') !== -1) {
-    let str = url.substr(1)
-    let strs = str.split('&')
-    for (let i = 0; i < strs.length; i++) {
-      theRequest[strs[i].split('=')[0]] = unescape(strs[i].split('=')[1])
-    }
-  }
-  return theRequest
-}

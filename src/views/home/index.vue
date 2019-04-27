@@ -3,21 +3,21 @@
     <div id="container">
         <van-field v-model="orderNum" placeholder="订单号" name="订单号" class="field"/>
               <van-row type="flex">
-            <van-col span="4.5" id="buttonGutter">
-              <van-button plain @click="show = true" size="mini" class="rules">{{button}}</van-button >
+            <van-col span="4" id="buttonGutter">
+              <van-button plain @click="showThumb" size="mini" class="rules">{{button}}</van-button >
               <van-dialog v-model="show" title="截图展示" show-cancel-button>
                 <img src="../../assets/image/evaluation.png" class="picture">
               </van-dialog>
           </van-col>
-          <van-col span="4.5">
+          <van-col span="4">
             <van-button plain @click="onClickAlertRules" size="mini" class="rules">{{button1}}</van-button>
           </van-col>
       </van-row>
       <div class="uploader">
-      <van-uploader :after-read="onRead" name="截图" accept="image/jpg, image/jpeg, image/png" multiple >
+      <van-uploader :after-read="onRead" name="截图" accept="image/jpg, image/jpeg, image/png">
           <van-row type="flex">
               <van-col>
-                  <div v-for="(item,index) in img " :key="item">
+                  <div v-for="(item, index) in img " :key=index>
                       <img :src="item"  ref="goodsImg" class="Photograph" >
                       <van-icon name="clear" @click="imgclose(index)"></van-icon>
                   </div>
@@ -28,73 +28,73 @@
       </div>
       <van-button v-on:click="submitComment" type="primary" size="large" style="border-radius:5px;">{{button2}}</van-button>
       <!--  右下角 + 的跳转  -->
-      <div class="routerLink" v-show="showService">
-        <van-row>
-          <van-icon name="service-o" class="iconService"  @click="customer = true"/>
-            <van-dialog
-                    v-model="customer"
-                    title="联系客服"
-                    show-cancel-button
-            >
-              <img src="../../assets/image/customer.png" class="picture">
-            </van-dialog>
-        </van-row>
-        <van-row>
-          <img
-                  src="../../assets/image/addSign.png"
-                  class="AddMin"
-                  @click="changeMin"
-          >
-        </van-row>
-      </div>
+<!--      <div class="routerLink" v-show="showService">-->
+<!--        <van-row>-->
+<!--          <van-icon name="service-o" class="iconService"  @click="customer = true"/>-->
+<!--            <van-dialog-->
+<!--                    v-model="customer"-->
+<!--                    title="联系客服"-->
+<!--                    show-cancel-button-->
+<!--            >-->
+<!--              <img src="../../assets/image/customer.png" class="picture">-->
+<!--            </van-dialog>-->
+<!--        </van-row>-->
+<!--        <van-row>-->
+<!--          <img-->
+<!--                  src="../../assets/image/addSign.png"-->
+<!--                  class="AddMin"-->
+<!--                  @click="changeMin"-->
+<!--          >-->
+<!--        </van-row>-->
+<!--      </div>-->
       <!--  右下角 - 跳转  -->
-      <div class="routerLink" v-show="noshowService" >
-        <van-row>
-            <div>
-          <van-icon name="service-o" class="iconService" @click="customer = true"/>
-            <van-dialog
-                        v-model="customer"
-                        title="联系客服"
-                        show-cancel-button
-            >
-              <img src="../../assets/image/customer.png" class="picture">
-            </van-dialog>
-            </div>
-          <router-link :to="{path:'../teach'}" >
-            <van-icon name="question-o" class="iconTeach"/>
-          </router-link>
-          <router-link :to="{path:'../task'}" >
-            <van-icon name="point-gift-o" id="iconTask"/>
-          </router-link>
-          <img
-                  src="../../assets/image/minusSign.png"
-                  class="AddMin"
-                  @click="changeAdd"
-          >
-        </van-row>
-          <div class="span">
-              <p class="spanRemind">
-                <router-link :to="{path:'../task'}" style="color: white">
-                  {{button3}}
-                </router-link>
-              </p>
-              <p class="spanRemind">
-                <router-link :to="{path:'../teach'}" style="color: white">
-                {{button4}}
-                </router-link>
-              </p>
-              <p class="spanRemind">
-                {{button5}}
-                <van-dialog
-                        v-model="customer"
-                        title="联系客服"
-                        show-cancel-button
-                >
-                  <img src="../../assets/image/customer.png" class="picture">
-                </van-dialog>
-              </p>
-          </div>
-      </div>
+<!--      <div class="routerLink" v-show="noshowService" >-->
+<!--        <van-row>-->
+<!--            <div>-->
+<!--          <van-icon name="service-o" class="iconService" @click="customer = true"/>-->
+<!--            <van-dialog-->
+<!--                        v-model="customer"-->
+<!--                        title="联系客服"-->
+<!--                        show-cancel-button-->
+<!--            >-->
+<!--              <img src="../../assets/image/customer.png" class="picture">-->
+<!--            </van-dialog>-->
+<!--            </div>-->
+<!--          <router-link :to="{path:'../teach'}" >-->
+<!--            <van-icon name="question-o" class="iconTeach"/>-->
+<!--          </router-link>-->
+<!--          <router-link :to="{path:'../task'}" >-->
+<!--            <van-icon name="point-gift-o" id="iconTask"/>-->
+<!--          </router-link>-->
+<!--          <img-->
+<!--                  src="../../assets/image/minusSign.png"-->
+<!--                  class="AddMin"-->
+<!--                  @click="changeAdd"-->
+<!--          >-->
+<!--        </van-row>-->
+<!--          <div class="span">-->
+<!--              <p class="spanRemind">-->
+<!--                <router-link :to="{path:'../task'}" style="color: white">-->
+<!--                  {{button3}}-->
+<!--                </router-link>-->
+<!--              </p>-->
+<!--              <p class="spanRemind">-->
+<!--                <router-link :to="{path:'../teach'}" style="color: white">-->
+<!--                {{button4}}-->
+<!--                </router-link>-->
+<!--              </p>-->
+<!--              <p class="spanRemind">-->
+<!--                {{button5}}-->
+<!--                <van-dialog-->
+<!--                        v-model="customer"-->
+<!--                        title="联系客服"-->
+<!--                        show-cancel-button-->
+<!--                >-->
+<!--                  <img src="../../assets/image/customer.png" class="picture">-->
+<!--                </van-dialog>-->
+<!--              </p>-->
+<!--          </div>-->
+<!--      </div>-->
     </div>
   </div>
 </template>
@@ -138,12 +138,17 @@ export default {
       button5: '联系客服'
     })
   },
-  mounted () {
+  created () {
     this.formData = new FormData()
+  },
+  mounted () {
     // this.formData.append('activity', api.show.activityDetail(this.activityDetail)) // <--- 从服务器 get activity
   },
   methods: {
     // 删除预览图片
+    showThumb () {
+      this.show = true
+    },
     imgclose (e) {
       this.img.splice(e, 1)
     },
@@ -171,31 +176,27 @@ export default {
       // // activity这个参数从url中获得
       const activity = this.$route.query.activity
       this.formData.append('activity', activity) // <---- activity
-      try {
-        if (this.formData.get('order_id') === undefined || this.formData.get('order_id') === null) {
-          Toast('订单号不能为空')
-        } else if (isNaN(this.formData.get('order_id')) && this.formData.get('order_id').length !== 18) {
-          Toast('请输入正确的订单号格式') // <---isNaN() 函数用于检查其参数是否是非数字值。非数值就是 ture
-        } else if (this.formData.get('screen_shot') === undefined || this.formData.get('screen_shot') === null) {
-          Toast('晒单截图不能为空')
-        } else if (this.formData.get('activity') === undefined || this.formData.get('activity') === null) {
-          Toast('参数错误')
+      if (this.formData.get('order_id') === undefined || this.formData.get('order_id') === null) {
+        Toast('订单号不能为空')
+      } else if (this.formData.get('order_id').length !== 18) {  // isNaN(this.formData.get('order_id')) &&
+        Toast('请输入正确的订单号格式') // <---isNaN() 函数用于检查其参数是否是非数字值。非数值就是 ture
+      } else if (this.formData.get('screen_shot') === undefined || this.formData.get('screen_shot') === null) {
+        Toast('晒单截图不能为空')
+      } else if (this.formData.get('activity') === undefined || this.formData.get('activity') === null) {
+        Toast('参数错误')
+      } else {
+        const { data } = await api.show.showCreate(this.formData)
+        if (data.code !== 200) {
+          Toast('提交错误，请重试')
         } else {
-          const { data } = await api.show.showCreate(this.formData)
-          if (data.code !== 200) {
-            Toast(data.code)
-          } else {
-            Toast(data.desc)
-          }
+          Toast('提交成功')
         }
-      } catch (e) {
-        Toast(e.message)
       }
     },
     onClickAlertRules () {
       this.$dialog.alert({
         title: '活动规则',
-        message: '1.按照要求完成评价截图上传，订单号上传。 2.人工审核后发放红包。'
+        message: '1.按照要求完成评价截图上传，订单号上传。\n 2.人工审核后发放红包。'
       })
     },
     // 点击加号，替换减号列表

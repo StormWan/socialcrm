@@ -24,12 +24,16 @@ const tip = msg => {
  * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
  */
 const toLogin = () => {
-  router.replace({
-    path: '/',
-    query: {
-      redirect: router.currentRoute.fullPath
-    }
-  })
+  router.go(-1)
+  // router.replace({
+    path: '/'
+    // path: urlDel('code'),
+    // query: {
+    //   redirect: router.currentRoute.fullPath
+    // }
+  // })
+  // console.log(urlDel('code'))
+  // console.log(router.currentRoute.fullPath)
 }
 
 /**
@@ -43,17 +47,20 @@ const errorHandle = (status, other) => {
     case 401:
       tip('未登录，请登录')
       localStorage.clear() // <---清空 localStorage ，跳转微信授权页面
-      toLogin()
+      // console.log('进入401了')
+      // setTimeout(() => {
+      //   toLogin()
+      // }, 1000)
       break
     // 403 token过期
     // 清除token并跳转登录页
     case 403:
       tip('登录过期，请重新登录')
-      localStorage.removeItem('token')
-      store.commit('loginSuccess', null)
-      setTimeout(() => {
-        toLogin()
-      }, 1000)
+      localStorage.clear()
+      // store.commit('loginSuccess', null)
+      // setTimeout(() => {
+      //   toLogin()
+      // }, 1000)
       break
     // 404请求不存在
     case 404:

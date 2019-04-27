@@ -4,7 +4,7 @@ import router from './router'
 import store from './store'
 import { Icon, Lazyload, Dialog } from 'vant'
 import api from './api' // 导入api接口
-import './common/validate'
+// import './common/validate'
 
 Vue.prototype.$api = api // 将api挂载到vue的原型上
 Vue.config.productionTip = false
