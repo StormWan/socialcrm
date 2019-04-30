@@ -1,5 +1,6 @@
 <template>
   <div id="home">
+    <div id="imgbackGround"></div>
     <div id="container">
         <van-field v-model="orderNum" placeholder="请输入长度为18的订单号" name="订单号" class="field"/>
               <van-row type="flex">
@@ -87,6 +88,7 @@ export default {
     showThumb () {
       this.show = true
     },
+    // 点击删除的按钮
     imgclose (e) {
       console.log(e)
       this.img.splice(e, 1)
@@ -95,13 +97,6 @@ export default {
     ...mapMutations({
       setActiveTab: 'tabbar/setActiveTab' // 将 `this.setActiveTab()` 映射为 `this.$store.commit('setActiveTab')`
     }),
-    // async validate () {
-    //   const result = await this.$validator.validate()
-    //   if (!result) {
-    //     const errMsg = this.errors.items[0].msg
-    //     throw new Error(errMsg)
-    //   }
-    // },
     onRead (file) {
       if (this.img.length >= 1) { // <------限定只能上传一张截图
         Toast('只需上传一张图喲！')
@@ -171,13 +166,19 @@ export default {
 
 <style scoped lang="less">
   #home {
-      /*background-image: url("../../assets/image/homeBackground.jpg");*/
+      background-color: #d54c42;
       width: 100%;
       height: 100%;
       background-size: 100% 100%;
       position: fixed;
       display: block;
-      background-color: #da3f52;
+
+      #imgbackGround {
+          background-image: url("../../assets/image/homeBackground.jpg");
+          width: 100%;
+          height: 160px;
+          background-size: 100% 100%;
+      }
       #container {
           position: relative;
           padding-left: 10px;
@@ -185,7 +186,7 @@ export default {
           /*输入框的样式*/
           .field {
              /*margin-top: 50%;*/
-              margin-top: 160px;
+             /* margin-top: 160px;*/
               margin-bottom: 10px;
               background-color: white; /*设置输入框浅灰色*/
               padding: 10px;
@@ -194,7 +195,7 @@ export default {
 
           /*截图示例 + 活动规则的按钮间距*/
           #buttonGutter {
-              padding-right: 10px
+              padding-left: 10px
           }
 
           /*rules 截图示例，活动规则 外围边框*/

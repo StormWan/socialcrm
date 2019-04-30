@@ -3,8 +3,8 @@
  */
 import apply from './apply'
 import show from './show'
-
+import share from './share'
 // 导出接口
 export default {
-  apply, show
+  apply, show, share
 }

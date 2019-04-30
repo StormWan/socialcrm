@@ -20,17 +20,6 @@ const router = new Router({
         // tabbar: () => import('./components/tabbar/index.vue')
       }
     },
-    // {
-    //   path: '/activity/:id',
-    //   name: 'activity',
-    //   meta: {
-    //     noAuth: false// 处理需要登录的页面
-    //   },
-    //   components: {
-    //     default: () => import('./views/home/index.vue'),
-    //     // tabbar: () => import('./components/tabbar/index.vue')
-    //   }
-    // },
     {
       path: '/task',
       name: 'task',
@@ -86,6 +75,28 @@ const router = new Router({
       },
       components: {
         default: () => import('./views/rebate/index.vue')
+      }
+    },
+    {
+      path: '/bingingPhone',
+      name: 'bingingPhone',
+      meta: {
+        keepAlive: true,
+        noAuth: true// 处理不需要登录的页面
+      },
+      components: {
+        default: () => import('./views/bingingPhone/index.vue')
+      }
+    },
+    {
+      path: '/shareMoments',
+      name: 'shareMoments',
+      meta: {
+        keepAlive: true,
+        noAuth: false// 处理需要登录的页面
+      },
+      components: {
+        default: () => import('./views/shareMoments/index.vue')
       }
     }
   ]
@@ -166,7 +177,8 @@ router.beforeEach(async (to, from, next) => {
       const userinfoEencoded = getUrlKey('userinfo')
       if (openid === undefined || openid === null || openid === '') {
         console.log('yaoyaola auth redirect')
-        window.location.href = `http://www.yaoyaola.cn/index.php/exapi/checkuser?uid=30716&url=${encodedRedirectUrl}&flag=1`
+        next()
+        // window.location.href = `http://www.yaoyaola.cn/index.php/exapi/checkuser?uid=30716&url=${encodedRedirectUrl}&flag=1`
       } else {
         let { data } = await api.apply.yaoAuth({ openid: openid, userinfo: userinfoEencoded, token: token, appid: appid }) // 获取用户信息,后端可首先通过cookie,session等判断,没有信息则通过code获取
         if (data.code === 200) {
@@ -176,7 +188,8 @@ router.beforeEach(async (to, from, next) => {
             // 微信跳转，使用商户的appid获取用户的openid信息: merchant_openid
             console.log(data.data.merchant_openid)
             localStorage.removeItem('merchant_openid')
-            window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodedRedirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+            next()
+            // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodedRedirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
             return
           }
           console.log(data.data)
@@ -186,7 +199,8 @@ router.beforeEach(async (to, from, next) => {
           return
         } else {
           console.log(data)
-          window.location.href = `http://www.yaoyaola.cn/index.php/exapi/checkuser?uid=30716&url=${encodedRedirectUrl}&flag=1`
+          next()
+          // window.location.href = `http://www.yaoyaola.cn/index.php/exapi/checkuser?uid=30716&url=${encodedRedirectUrl}&flag=1`
         }
       }
     }
@@ -197,7 +211,8 @@ router.beforeEach(async (to, from, next) => {
       console.log('appid=' + appid)
       if (code === null || code === undefined || code === '') {
         console.log('in code is null and redirect to wechat auth code=' + code)
-        window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodedRedirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+        next()
+        // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodedRedirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
       } else {
         let { data } = await api.apply.merchantAuth({ code: code, token: token, redirect_uri: redirectUrl })
         if (data.code === 200) {
@@ -209,7 +224,8 @@ router.beforeEach(async (to, from, next) => {
           return
         } else {
           console.log(data)
-          window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodedRedirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
+          next()
+          // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${encodedRedirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
         }
       }
     }
