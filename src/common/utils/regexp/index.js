@@ -19,7 +19,7 @@ export function getQueryString (url, name) {
 
 export function getUrlKey (name) {
   return decodeURIComponent(
-      (new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null;
+    (new RegExp('[?|&]' + name + '=' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ""])[1].replace(/\+/g, '%20')) || null
 }
 
 // 截取url上的code ,可能没有,则返回''空字符串,截取的是"?"后面的字串

@@ -1,100 +1,35 @@
 <template>
   <div id="home">
     <div id="container">
-        <van-field v-model="orderNum" placeholder="订单号" name="订单号" class="field"/>
+        <van-field v-model="orderNum" placeholder="请输入长度为18的订单号" name="订单号" class="field"/>
               <van-row type="flex">
             <van-col span="4" id="buttonGutter">
-              <van-button plain @click="showThumb" size="mini" class="rules">{{button}}</van-button >
+              <van-button plain @click="showThumb" size="mini" class="rules">截图示例</van-button >
               <van-dialog v-model="show" title="截图展示" show-cancel-button>
                 <img src="../../assets/image/evaluation.png" class="picture">
               </van-dialog>
           </van-col>
           <van-col span="4">
-            <van-button plain @click="onClickAlertRules" size="mini" class="rules">{{button1}}</van-button>
+            <van-button plain @click="onClickAlertRules" size="mini" class="rules">活动规则</van-button>
           </van-col>
       </van-row>
       <div class="uploader">
-      <van-uploader :after-read="onRead" name="截图" accept="image/jpg, image/jpeg, image/png">
+      <van-uploader :after-read="onRead" name="截图" :max-size="maxSize" @oversize="oversize" accept="image/jpg, image/jpeg, image/png">
           <van-row type="flex">
               <van-col>
                   <div v-for="(item, index) in img " :key=index>
                       <img :src="item"  ref="goodsImg" class="Photograph" >
-                      <van-icon name="clear" @click="imgclose(index)"></van-icon>
+                      <van-icon name="clear" @click.native.stop="imgclose(index)"></van-icon>
                   </div>
               </van-col>
               <van-col><img src="@/assets/image/photograph.png" name="photograph" class="Photograph"></van-col>
           </van-row>
       </van-uploader>
       </div>
-      <van-button v-on:click="submitComment" type="primary" size="large" style="border-radius:5px;">{{button2}}</van-button>
-      <!--  右下角 + 的跳转  -->
-<!--      <div class="routerLink" v-show="showService">-->
-<!--        <van-row>-->
-<!--          <van-icon name="service-o" class="iconService"  @click="customer = true"/>-->
-<!--            <van-dialog-->
-<!--                    v-model="customer"-->
-<!--                    title="联系客服"-->
-<!--                    show-cancel-button-->
-<!--            >-->
-<!--              <img src="../../assets/image/customer.png" class="picture">-->
-<!--            </van-dialog>-->
-<!--        </van-row>-->
-<!--        <van-row>-->
-<!--          <img-->
-<!--                  src="../../assets/image/addSign.png"-->
-<!--                  class="AddMin"-->
-<!--                  @click="changeMin"-->
-<!--          >-->
-<!--        </van-row>-->
-<!--      </div>-->
-      <!--  右下角 - 跳转  -->
-<!--      <div class="routerLink" v-show="noshowService" >-->
-<!--        <van-row>-->
-<!--            <div>-->
-<!--          <van-icon name="service-o" class="iconService" @click="customer = true"/>-->
-<!--            <van-dialog-->
-<!--                        v-model="customer"-->
-<!--                        title="联系客服"-->
-<!--                        show-cancel-button-->
-<!--            >-->
-<!--              <img src="../../assets/image/customer.png" class="picture">-->
-<!--            </van-dialog>-->
-<!--            </div>-->
-<!--          <router-link :to="{path:'../teach'}" >-->
-<!--            <van-icon name="question-o" class="iconTeach"/>-->
-<!--          </router-link>-->
-<!--          <router-link :to="{path:'../task'}" >-->
-<!--            <van-icon name="point-gift-o" id="iconTask"/>-->
-<!--          </router-link>-->
-<!--          <img-->
-<!--                  src="../../assets/image/minusSign.png"-->
-<!--                  class="AddMin"-->
-<!--                  @click="changeAdd"-->
-<!--          >-->
-<!--        </van-row>-->
-<!--          <div class="span">-->
-<!--              <p class="spanRemind">-->
-<!--                <router-link :to="{path:'../task'}" style="color: white">-->
-<!--                  {{button3}}-->
-<!--                </router-link>-->
-<!--              </p>-->
-<!--              <p class="spanRemind">-->
-<!--                <router-link :to="{path:'../teach'}" style="color: white">-->
-<!--                {{button4}}-->
-<!--                </router-link>-->
-<!--              </p>-->
-<!--              <p class="spanRemind">-->
-<!--                {{button5}}-->
-<!--                <van-dialog-->
-<!--                        v-model="customer"-->
-<!--                        title="联系客服"-->
-<!--                        show-cancel-button-->
-<!--                >-->
-<!--                  <img src="../../assets/image/customer.png" class="picture">-->
-<!--                </van-dialog>-->
-<!--              </p>-->
-<!--          </div>-->
-<!--      </div>-->
+      <van-dialog v-model="serviceQrCodeShow" title="长按关注客服二维码" show-cancel-button>
+        <img :src="serviceQrCodeImage" class="picture">
+      </van-dialog>
+      <van-button v-on:click="submitComment" type="primary" size="large" style="border-radius:5px;">确定</van-button>
     </div>
   </div>
 </template>
@@ -103,6 +38,8 @@
 import { Button, Toast, CellGroup, Cell, Field, Uploader, Row, Col, Icon, Popup } from 'vant'
 import api from '@/api/'
 import { mapMutations } from 'vuex'
+import { getUrlKey } from '../../common/utils/regexp'
+import base from '../../api/base'
 
 export default {
   name: 'home',
@@ -120,9 +57,8 @@ export default {
   data () {
     return ({
       activityDetail: null,
-      orderNum: null,
-      image: null,
-      formData: null,
+      orderNum: '',
+      file: '',
       img: [], // 用于显示图片
       show: false,
       customer: false,
@@ -130,19 +66,21 @@ export default {
       show1: false,
       showService: true,
       noshowService: false,
-      button: '截图示例',
-      button1: '活动规则',
-      button2: '确定',
-      button3: '我的任务',
-      button4: '我的教程',
-      button5: '联系客服'
+      maxSize: 1024 * 1024 * 2,
+      serviceQrCodeShow: false
     })
   },
-  created () {
-    this.formData = new FormData()
+  async mounted () {
+    const { data } = await this.$api.show.activityDetail(getUrlKey('activity'))
+    if (data.code === 200) {
+      this.activityDetail = data.data
+    }
   },
-  mounted () {
-    // this.formData.append('activity', api.show.activityDetail(this.activityDetail)) // <--- 从服务器 get activity
+  computed: {
+    serviceQrCodeImage () {
+      const defaultQrCode = '/media/marketing/activity/default_service_qr_code.jpg'
+      return this.activityDetail !== null && this.activityDetail.customer_service_qrcode !== null ? base.base + this.activityDetail.customer_service_qrcode : defaultQrCode
+    }
   },
   methods: {
     // 删除预览图片
@@ -150,6 +88,7 @@ export default {
       this.show = true
     },
     imgclose (e) {
+      console.log(e)
       this.img.splice(e, 1)
     },
     // 活动规则的弹窗信息
@@ -167,36 +106,49 @@ export default {
       if (this.img.length >= 1) { // <------限定只能上传一张截图
         Toast('只需上传一张图喲！')
       } else {
-        this.formData.append('screen_shot', file.file)
+        this.file = file.file
         this.img.push(file.content)
       }
     },
+    oversize (file) {
+      Toast('上传的文件不能超过2M!')
+    },
     async submitComment () {
-      this.formData.append('order_id', this.orderNum)
-      // // activity这个参数从url中获得
-      const activity = this.$route.query.activity
-      this.formData.append('activity', activity) // <---- activity
-      if (this.formData.get('order_id') === undefined || this.formData.get('order_id') === null) {
+      let formData = new FormData()
+      formData.append('screen_shot', this.file)
+      formData.append('order_id', this.orderNum)
+      const activity = getUrlKey('activity')
+      formData.append('activity', activity) // <---- activity
+      if (this.orderNum === undefined || this.orderNum === null || this.orderNum.length === 0) {
         Toast('订单号不能为空')
-      } else if (this.formData.get('order_id').length !== 18) {  // isNaN(this.formData.get('order_id')) &&
-        Toast('请输入正确的订单号格式') // <---isNaN() 函数用于检查其参数是否是非数字值。非数值就是 ture
-      } else if (this.formData.get('screen_shot') === undefined || this.formData.get('screen_shot') === null) {
+      } else if (this.orderNum.length < 2) {
+        Toast('订单号长度太短') // <---isNaN() 函数用于检查其参数是否是非数字值。非数值就是 ture
+      } else if (this.file === undefined || this.file === null || this.file === '') {
         Toast('晒单截图不能为空')
-      } else if (this.formData.get('activity') === undefined || this.formData.get('activity') === null) {
+      } else if (activity === undefined || activity === null) {
         Toast('参数错误')
       } else {
-        const { data } = await api.show.showCreate(this.formData)
+        const { data } = await api.show.showCreate(formData)
         if (data.code !== 200) {
-          Toast('提交错误，请重试')
+          Toast(JSON.stringify(data.desc) + ' activity=' + formData.get('activity'))
+          console.log(data)
         } else {
           Toast('提交成功')
+          this.orderNum = ''
+          this.img = []
+          this.file = ''
+          this.serviceQrCodeShow = true
+          // const activity = getUrlKey('activity')
+          // this.$router.replace({ name: 'home', query: { activity: activity } })
         }
       }
     },
     onClickAlertRules () {
+      const defaultRules = '1.按照要求完成评价并截图上传。\n 2.系统审核后发放红包。'
+      const rules = this.activityDetail.rules === null || this.activityDetail.rules === undefined ? defaultRules : this.activityDetail.rules
       this.$dialog.alert({
         title: '活动规则',
-        message: '1.按照要求完成评价截图上传，订单号上传。\n 2.人工审核后发放红包。'
+        message: rules
       })
     },
     // 点击加号，替换减号列表
@@ -219,19 +171,18 @@ export default {
 
 <style scoped lang="less">
   #home {
-      background-image: url("../../assets/image/homeBackground.jpg");
+      /*background-image: url("../../assets/image/homeBackground.jpg");*/
       width: 100%;
       height: 100%;
       background-size: 100% 100%;
       position: fixed;
       display: block;
-
+      background-color: #da3f52;
       #container {
           position: relative;
           padding-left: 10px;
           padding-right: 10px;
           /*输入框的样式*/
-
           .field {
              /*margin-top: 50%;*/
               margin-top: 160px;
@@ -242,13 +193,11 @@ export default {
           }
 
           /*截图示例 + 活动规则的按钮间距*/
-
           #buttonGutter {
               padding-right: 10px
           }
 
           /*rules 截图示例，活动规则 外围边框*/
-
           .rules {
               border: 1px dashed white; /*断续的白色的框*/
               background-color: #da4636;
@@ -257,7 +206,6 @@ export default {
           }
 
           /*photograph 大小和周围的边框*/
-
           .Photograph {
               width: 60px;
               height: 60px;
@@ -267,14 +215,12 @@ export default {
           }
 
           /* 显示好评例子 + 客服二维码 图片的大小 */
-
           .picture {
               width: 280px;
               height: 280px;
           }
 
           /*uploader 的输入框大小*/
-
           .uploader {
               background-color: white; /*设置输入框浅灰色*/
               margin-bottom: 10px;
@@ -286,125 +232,12 @@ export default {
               /*点击删除的图片样式*/
                 position: absolute;
                 color: red;
-                font-size: large;
+                font-size: 25px;
                 left: 55px;
                 margin-top: 0px;
-              }
-          }
-
-          /* 绿色加号,橙色减号 图片的大小 */
-
-          .AddMin {
-              width: 2.7rem;
-              height: 2.7rem;
-          }
-
-          /*客服icon，继承 icon 的样式*/
-
-          .iconService{
-              top: 235px;
-              /*animation: myService 200ms;*/
-          }
-
-          /*任务icon*/
-
-          #iconTask{
-              top: 165px;
-              animation: myTask 200ms;
-          }
-
-          /*教程icon*/
-
-          .iconTeach{
-              top: 200px;
-              animation: myTeach 200ms;
-          }
-
-          /*右下角总的样式*/
-          .routerLink {
-              float: right;
-              right: 0px;
-              margin-top: 45px;
-              z-index: 999;
-            router-link {
-              color: white;
-            }
-          }
-
-          /*span*/
-
-          .span {
-              position: absolute;
-              z-index: 900;
-              top: 150px;
-              right: 50px;
-              padding: 5px;
-              color: white;
-              width: 70px;
-              animation: mySpan 300ms;
-
-              .spanRemind {
-                  margin-top: 20px;
-                  padding-left: 5px;
-                  background-color: rgba(0, 0, 0, 0.5);
-                  border-radius: 2px;
-                .font {
-                  color: white;
-                }
-              }
-          }
-
-          @keyframes myTeach {
-              0% {
-                  top: 255px;
-              }
-              25% {
-                  top: 240px;
-              }
-              50% {
-                  top: 225px;
-              }
-              100% {
-                  top: 215px;
-              }
-          }
-          @keyframes myTask {
-              0% {
-                  top: 255px;
-              }
-              25% {
-                  top: 209px;
-              }
-              50% {
-                  top: 193px;
-              }
-              100% {
-                  top: 175px;
-              }
-          }
-          @keyframes mySpan {
-              0% {
-                  opacity: 0.01
-              }
-              25% {
-                  opacity: 0.3
-              }
-              50% {
-                  opacity: 0.75
-              }
-              100% {
-                  opacity: 1
+                z-index:9999;
               }
           }
       }
-  }
-  .van-icon {
-      font-size: 2em;
-      margin: 5px;
-      background-color: white;
-      border-radius: 20px;
-      position: absolute;
-      z-index: 999;
-      /*（申请icon）到.iconService类的任何地方.iconService类出现。*/
   }
 </style>

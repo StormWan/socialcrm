@@ -16,6 +16,12 @@ const apply = {
    * */
   auth (params) {
     return axios.post(`${base.scrm}/account/auth/`, qs.stringify(params))
+  },
+  yaoAuth (params) {
+    return axios.post(`${base.scrm}/account/yaoAuth/`, qs.stringify(params))
+  },
+  merchantAuth (params) {
+    return axios.post(`${base.scrm}/account/merchantAuth/`, qs.stringify(params))
   }
 }
 

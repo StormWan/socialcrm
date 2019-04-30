@@ -5,7 +5,9 @@ import store from './store'
 import { Icon, Lazyload, Dialog } from 'vant'
 import api from './api' // 导入api接口
 // import './common/validate'
+import Vconsole from 'vconsole'
 
+const vConsole = new Vconsole()
 Vue.prototype.$api = api // 将api挂载到vue的原型上
 Vue.config.productionTip = false
 Vue.use(Icon)

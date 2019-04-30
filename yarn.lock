@@ -4929,9 +4929,9 @@ joi@^14.3.0:
     isemail "3.x.x"
     topo "3.x.x"
 
-js-base64@^2.1.9:
+js-base64@^2.1.9, js-base64@^2.5.1:
   version "2.5.1"
-  resolved "http://registry.npm.taobao.org/js-base64/download/js-base64-2.5.1.tgz#1efa39ef2c5f7980bb1784ade4a8af2de3291121"
+  resolved "https://registry.npm.taobao.org/js-base64/download/js-base64-2.5.1.tgz#1efa39ef2c5f7980bb1784ade4a8af2de3291121"
   integrity sha1-Hvo57yxfeYC7F4St5KivLeMpESE=
 
 js-levenshtein@^1.1.3:
@@ -8317,7 +8317,7 @@ vary@~1.1.2:
 
 vconsole@^3.3.0:
   version "3.3.0"
-  resolved "http://registry.npm.taobao.org/vconsole/download/vconsole-3.3.0.tgz#42629c07fb3b6a72733d2bbc417ee3e84b2bc76e"
+  resolved "https://registry.npm.taobao.org/vconsole/download/vconsole-3.3.0.tgz#42629c07fb3b6a72733d2bbc417ee3e84b2bc76e"
   integrity sha1-QmKcB/s7anJzPSu8QX7j6Esrx24=
 
 vee-validate@^2.2.2:

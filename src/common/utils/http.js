@@ -24,16 +24,7 @@ const tip = msg => {
  * 携带当前页面路由，以期在登录页面完成登录后返回当前页面
  */
 const toLogin = () => {
-  router.go(-1)
-  // router.replace({
-    path: '/'
-    // path: urlDel('code'),
-    // query: {
-    //   redirect: router.currentRoute.fullPath
-    // }
-  // })
-  // console.log(urlDel('code'))
-  // console.log(router.currentRoute.fullPath)
+  router.go(0)
 }
 
 /**
@@ -48,9 +39,9 @@ const errorHandle = (status, other) => {
       tip('未登录，请登录')
       localStorage.clear() // <---清空 localStorage ，跳转微信授权页面
       // console.log('进入401了')
-      // setTimeout(() => {
-      //   toLogin()
-      // }, 1000)
+      setTimeout(() => {
+        toLogin()
+      }, 1000)
       break
     // 403 token过期
     // 清除token并跳转登录页
@@ -58,9 +49,9 @@ const errorHandle = (status, other) => {
       tip('登录过期，请重新登录')
       localStorage.clear()
       // store.commit('loginSuccess', null)
-      // setTimeout(() => {
-      //   toLogin()
-      // }, 1000)
+      setTimeout(() => {
+        toLogin()
+      }, 1000)
       break
     // 404请求不存在
     case 404:
@@ -72,7 +63,7 @@ const errorHandle = (status, other) => {
 }
 
 // 创建axios实例
-var instance = axios.create({ timeout: 1000 * 12 })
+var instance = axios.create({ timeout: 1000 * 24 })
 // 设置post请求头
 instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 

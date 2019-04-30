@@ -16,11 +16,10 @@ const show = {
     return axios.post(`${base.scrm}/marketing/show/`, params)
   },
   // 获取 activity 和活动个各种详情信息
-  /**
-   * @param {Object} params - {activity, claim}
-   * */
-  activityDetail (params) {
-    return axios.get(`${base.scrm}/marketing/activity/`, params)
+  activityDetail (id, params) {
+    return axios.get(`${base.scrm}/marketing/activity/${id}/`, {
+      params: params
+    })
   }
 }
 
