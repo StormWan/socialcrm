@@ -11,11 +11,14 @@
             </div>
         </div>
         <div id="buttom">
-            <van-button size="large" type="primary">点击生成分享海报</van-button>
+            <van-button size="large" type="primary" @click="showThumb" >点击生成分享海报</van-button>
+            <van-dialog v-model="showPoster" title="截图展示" show-cancel-button>
+                <img src="../../assets/image/evaluation.png" class="picture">
+            </van-dialog>
             <!--  截图示例 + 活动规则      -->
             <van-row type="flex">
                 <van-col span="4" >
-                    <van-button plain @click="showThumb" size="mini" class="rules">截图示例</van-button >
+                    <van-button plain @click="showThumb_1" size="mini" class="rules">截图示例</van-button >
                     <van-dialog v-model="show" title="截图展示" show-cancel-button>
                         <img src="../../assets/image/evaluation.png" class="picture">
                     </van-dialog>
@@ -46,7 +49,7 @@
     </div>
 </template>
 
-<script>
+<script >
 import { Button, Row, Col, Icon, Uploader, Toast } from 'vant'
 import { getUrlKey } from '../../common/utils/regexp'
 import api from '@/api/'
@@ -66,6 +69,7 @@ export default {
     return ({
       img: [], // 用于显示图片
       show: false,
+      showPoster: false,
       maxSize: 1024 * 1024 * 2,
       serviceQrCodeShow: false,
       activityDetail: null
@@ -75,7 +79,6 @@ export default {
     const { data } = await this.$api.show.activityDetail(getUrlKey('activity'))
     if (data.code === 200) {
       this.activityDetail = data.data
-      console.log('this.activityDetail' + this.activityDetail)
     }
   },
   computed: { // <---获取客服的二维码
@@ -86,6 +89,9 @@ export default {
   },
   methods: {
     showThumb () {
+      this.showPoster = true
+    },
+    showThumb_1 () {
       this.show = true
     },
     onClickAlertRules () {
@@ -100,6 +106,7 @@ export default {
       })
     },
     onRead (file) {
+      console.log(this.img.length)
       if (this.img.length >= 1) { // <------限定只能上传一张截图
         Toast('只需上传一张图喲！')
       } else {
@@ -189,8 +196,10 @@ export default {
             /* 显示好评例子图片的大小 */
 
             .picture {
-                width: 280px;
-                height: 280px;
+                width: 100%;
+                height: 300px;
+                position: relative;
+                z-index: 99999;
             }
 
             .uploader{
@@ -225,7 +234,7 @@ export default {
                 font-size: 25px;
                 left: 55px;
                 margin-top: 0px;
-                z-index:9999;
+                z-index:999;
             }
         }
     }

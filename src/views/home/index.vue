@@ -4,7 +4,7 @@
     <div id="container">
         <van-field v-model="orderNum" placeholder="请输入长度为18的订单号" name="订单号" class="field"/>
               <van-row type="flex">
-            <van-col span="4" id="buttonGutter">
+            <van-col span="4" >
               <van-button plain @click="showThumb" size="mini" class="rules">截图示例</van-button >
               <van-dialog v-model="show" title="截图展示" show-cancel-button>
                 <img src="../../assets/image/evaluation.png" class="picture">
@@ -192,12 +192,6 @@ export default {
               padding: 10px;
               border-radius: 5px
           }
-
-          /*截图示例 + 活动规则的按钮间距*/
-          #buttonGutter {
-              padding-left: 10px
-          }
-
           /*rules 截图示例，活动规则 外围边框*/
           .rules {
               border: 1px dashed white; /*断续的白色的框*/
@@ -219,6 +213,8 @@ export default {
           .picture {
               width: 280px;
               height: 280px;
+              position: relative;
+              z-index:9999;
           }
 
           /*uploader 的输入框大小*/
@@ -236,7 +232,7 @@ export default {
                 font-size: 25px;
                 left: 55px;
                 margin-top: 0px;
-                z-index:9999;
+                z-index:999;
               }
           }
       }
