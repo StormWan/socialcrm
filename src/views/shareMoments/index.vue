@@ -23,6 +23,7 @@
                         <img src="../../assets/image/evaluation.png" class="picture">
                     </van-dialog>
                 </van-col>
+<!--                <van-col span="1"/>-->
                 <van-col span="4">
                     <van-button plain @click="onClickAlertRules" size="mini" class="rules">活动规则</van-button>
                 </van-col>
@@ -166,7 +167,7 @@ export default {
             }
 
             #rule {
-                padding-left: 20px;
+                padding-left: 35px;
                 padding-top: 1px;
                 padding-bottom: 1px;
                 /*background-color: yellow;*/
