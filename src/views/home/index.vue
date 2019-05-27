@@ -1,6 +1,9 @@
 <template>
   <div id="home">
-    <div id="imgbackGround"></div>
+    <div id="head">
+        <img src="../../assets/image/homeBackground.jpg" id="imgbackGround">
+        <h3>快来抢<span>{{price}}</span>元红包吧</h3>
+    </div>
     <div id="container">
         <van-field v-model="orderNum" placeholder="请输入长度为18的订单号" name="订单号" class="field"/>
               <van-row type="flex">
@@ -68,13 +71,26 @@ export default {
       showService: true,
       noshowService: false,
       maxSize: 1024 * 1024 * 2,
-      serviceQrCodeShow: false
+      serviceQrCodeShow: false,
+      price: '',
+      pack_type: 0,
+      pack_min_price: 0,
+      pack_max_price: 0
     })
   },
   async mounted () {
     const { data } = await this.$api.show.activityDetail(getUrlKey('activity'))
     if (data.code === 200) {
       this.activityDetail = data.data
+      // 当 pack_type 为 0，就是两个价格一杠，为 1 就是不一样
+      if (this.activityDetail.pack_type === 0) {
+        this.price = this.activityDetail.pack_min_price
+      }
+      if (this.activityDetail.pack_type === 1) {
+        this.price = this.activityDetail.pack_min_price + '-' + this.activityDetail.pack_max_price
+      }
+    } else {
+      console.log(data.data)
     }
   },
   computed: {
@@ -168,16 +184,30 @@ export default {
   #home {
       background-color: #d54c42;
       width: 100%;
+      max-width: 700px;
       height: 100%;
       background-size: 100% 100%;
       position: fixed;
       display: block;
 
-      #imgbackGround {
-          background-image: url("../../assets/image/homeBackground.jpg");
-          width: 100%;
-          height: 160px;
-          background-size: 100% 100%;
+      #head{
+          display: flex;
+          justify-content: center;
+          #imgbackGround {
+              width: 100%;
+              height: 200px;
+          }
+          h3{
+              position: absolute;
+              top: 125px;
+              color: #ececec;
+              span{
+                  padding-right: 10px;
+                  padding-left: 10px;
+                  font-size: 20px;
+                  color: #f2e27b;
+              }
+          }
       }
       #container {
           position: relative;

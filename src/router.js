@@ -111,44 +111,6 @@ const router = new Router({
  * 5.code 若不为 200 就不允许跳转，再次进行微信授权页面
  * */
 
-// 全局前置守卫
-// router.beforeEach(async (to, from, next) => {
-//   // 如果 meta.noAuth 是 true 就直接跳转，如果是 false ,就需要登录之后再跳转
-//   if (to.matched.some(recode => recode.meta.noAuth)) {
-//     next()
-//   } else {
-//     // localStorage 存储数据存在，就直接获取信息，然后跳转到相对应的页面
-//     if (localStorage.getItem('userInfo') && localStorage.getItem('userInfo') !== 'undefined') {
-//       next() // 进入 home 页面
-//       return
-//     }
-//     // localStorage 没有保存的信息就跳转到微信申请页面，redirectUrl 是返回当前页面，也就是好评返现的页面
-//     const activity = getUrlKey('activity')
-//     const code = getUrlKey('code')
-//     const redirectUrl = base.base + '/#/?activity=' + activity
-//     const appid = 'wx6a75c84b50b0939f'
-//     if (code === undefined) {
-//       const url = `http://www.yaoyaola.cn/index.php/exapi/checkuser?uid=30716&url=${redirectUrl}&flag=1`
-//       window.location.href = url
-//       // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
-//     }
-//     if (code !== undefined) {
-//       const token = localStorage.getItem('token')
-//       let { data } = await api.apply.auth({ code: code, appid: appid, redirect_uri: redirectUrl, token: token }) // 获取用户信息,后端可首先通过cookie,session等判断,没有信息则通过code获取
-//       if (data.code === 200) {
-//         localStorage.setItem('userInfo', data)
-//         localStorage.setItem('token', token)
-//         next()
-//       } else {
-//         const url = `http://www.yaoyaola.cn/index.php/exapi/checkuser?uid=30716&url=${redirectUrl}&flag=1`
-//         window.location.href = url
-//         // next()
-//         // window.location.href = `https://open.weixin.qq.com/connect/oauth2/authorize?appid=${appid}&redirect_uri=${redirectUrl}&response_type=code&scope=snsapi_userinfo&state=123#wechat_redirect`
-//       }
-//     }
-//   }
-// })
-
 router.beforeEach(async (to, from, next) => {
   // 如果 meta.noAuth 是 true 就直接跳转，如果是 false ,就需要登录之后再跳转
   if (to.matched.some(recode => recode.meta.noAuth)) {
