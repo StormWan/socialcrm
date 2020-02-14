@@ -21,7 +21,7 @@
     "popup": "^0.0.3",
     "postcss-pxtorem": "^4.0.1",
     "row": "^0.0.1",
-    "vant": "^1.6.12",
+    "vant": "^2.1.8",
     "vconsole": "^3.3.0",
     "vee-validate": "^2.2.2",
     "vue": "^2.6.6",
