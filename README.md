@@ -4,5 +4,5 @@
 ## 红包返现的任务页面
 ![红包返现的示例图](https://github.com/StormWan/socialcrm/blob/master/sampleImg/红包返现.png)
 ## 设置个人页面的任务页面
-![个人页面示例图](http://github.com/StormWan/socialcrm/blob/master/sampleImg/about.png)
+![个人页面示例图](https://github.com/StormWan/socialcrm/blob/master/sampleImg/about.png)
 
