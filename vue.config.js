@@ -3,9 +3,9 @@ const pxtorem = require('postcss-pxtorem')
 
 module.exports = {
   // outputDir: 'docs',
-  // publicPath: '../../',
+  publicPath: './',
   // assetsPublicPath: './',
-  publicPath: process.env.NODE_ENV === 'production' ? '/static/dist' : './',
+  // publicPath: process.env.NODE_ENV === 'production' ? '/static/dist' : './',
   outputDir: 'static/dist',
   assetsDir: '',
   indexPath: '../../static/dist/index.html',
