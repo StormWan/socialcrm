@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "Promise": "^1.0.5",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "babel-plugin-import": "^1.11.0",
     "col": "^0.1.0",
     "collapse": "^1.0.1",
